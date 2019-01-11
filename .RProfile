@@ -41,31 +41,31 @@ print(paste("Working Directory set to:", wd))
 #Clipboard functions
 #Simple readlines from the clipboard:
 clipboard.readlines <- function (
-clipboardname = "pbpaste",
-n    = -1L) {
-readLines(con = pipe(clipboardname),
-n = n)}
+	clipboardname = "pbpaste",
+	n    = -1L) {
+	readLines(con = pipe(clipboardname),
+	n = n)}
 #Read table from the clipboard. I have only included the most commonly used arguments to read.table(). You could easily add all the rest if you need them:
 clipboard.readtable <- function (
-clipboardname = "pbpaste",
-header = FALSE,
-sep = "",
-quote = "\"'",
-dec = ".") {
-read.table(file = pipe(clipboardname),
-header = header,
-sep = sep,
-quote = quote,
-dec = dec)}
+	clipboardname = "pbpaste",
+	header = FALSE,
+	sep = "",
+	quote = "\"'",
+	dec = ".") {
+	read.table(file = pipe(clipboardname),
+	header = header,
+	sep = sep,
+	quote = quote,
+	dec = dec)}
 #Write to the clipboard:
 clipboard.write <- function (x,
-clipboardname = "pbcopy",
-sep   = " ") {
-osxclipboard <- pipe(clipboardname, "w")
-write(x = x,
-file = clipboard,
-sep = sep)
-Close(osxclipboard)}
+	clipboardname = "pbcopy",
+	sep   = " ") {
+	osxclipboard <- pipe(clipboardname, "w")
+	write(x = x,
+	file = clipboard,
+	sep = sep)
+	Close(osxclipboard)}
 
 print(noquote(paste("Login time:", Sys.time())))
 print(noquote(paste( "Working Directory:", getwd())))
