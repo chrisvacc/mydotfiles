@@ -43,7 +43,7 @@ Plugin 'tpope/vim-vinegar' " vinegar.vim
 
 
 "+-------------------------------------+
-"|          N-NVIM - PLUGINS           |
+"|          NVIM-R - PLUGINS           |
 "+-------------------------------------+
 
 
@@ -96,8 +96,14 @@ au User Ncm2Plugin call ncm2#register_source({
 	\ 'complete_pattern': ':\s*',
 	\ 'on_complete': ['ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
 	\ })
-"____________________________________________________________________________________________
-"Vim YARP settings - Yet Another Remote Plugin Framework for Neovim
+
+au! BufNewFile,BufRead *.R,*.Rout,*.r,*.Rhistory,*.Rt,*.Rout.save,*.Rout.fail,*.RProfile* setf r
+
+
+"+-------------------------------------+
+"|         VIM YARP SETTINGS           |
+"+-------------------------------------+
+
 
 let g:pyenv_host_prog = '/usr/local/bin/pyenv'
 let g:pip_host_prog = '/usr/local/bin/pip'
@@ -122,7 +128,7 @@ let R_args_in_stline = 1 "show arguments in line
 
 
 "+-------------------------------------+
-"|          THEME SETTINGS             |
+ "|          THEME PLUGINS             |
 "+-------------------------------------+
 
 "colored bottombar
@@ -162,7 +168,9 @@ let g:conoline_auto_enable = 1
 :set noshowmode
 
 
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+"+-------------------------------------+
+"|             END VUNDLE              |
+"+-------------------------------------+
 
 
 " All of your Plugins must be added before the following line
@@ -283,7 +291,9 @@ set clipboard=unnamed
 let g:slime_target = "tmux"
 
 
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+"+-------------------------------------+
+"|                                     |
+"+-------------------------------------+
 
 
 "vimfeatures - http://www.oualline.com/vim/10/vimrc.html
@@ -306,7 +316,6 @@ let g:slime_target = "tmux"
 
 " note trailing space at end of next line
 
-au! BufNewFile,BufRead *.R,*.Rout,*.r,*.Rhistory,*.Rt,*.Rout.save,*.Rout.fail,*.RProfile* setf r
 
 
 "+-------------------------------------+
@@ -335,4 +344,3 @@ augroup END "launch right after you’ve entered Vim
 let g:netrw_list_hide = '.git,.sass-cache,.jpg,.png,.svg,.afphoto'
 
 setglobal showcmd
-
