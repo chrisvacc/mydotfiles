@@ -1,6 +1,6 @@
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-"--------------------------------------------------------------------------------------------   GENERAL SETTINGS   -------------------------------------------------------------------------------------"
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+"+-------------------------------------+
+"|              GENERAL                |
+"+-------------------------------------+
 
 
 :cd ~/Documents/wd/
@@ -13,78 +13,92 @@ set title
 set backspace=indent,eol,start "Allow backspacing over indention, line breaks and insertion start.
 set history=1000 "Increase the undo limit.
 set hlsearch
-set showbreak=>\ \ |
-:set wrap
-:set linebreak
-:set nolist  " list disables linebreak
+set showcmd
+
+augroup myvimrchooks
+	au!
+	autocmd bufwritepost .vimrc source ~/.vimrc
+augroup END "vimrc autoreload
 
 
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-
-"colorscheme gotham
-"https://github.com/whatyouhide/vim-gotham
-
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-"--------------------------------------------------------------------------------------------   VUNDLE SETTINGS   --------------------------------------------------------------------------------------"
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+"+-------------------------------------+
+"|           VUNDLE SETTINGS           |
+"+-------------------------------------+
 
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+set rtp+=~/.vim/bundle/Vundle.vim " set the runtime path to include Vundle and initialize
+call vundle#begin() " alternatively, pass a path where Vundle should install plugins: 
+"call vundle#begin('~/some/path/here') " uncomment line to change path
+Plugin 'VundleVim/Vundle.vim' " let Vundle manage Vundle, required
 
 
-"--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-"--------------------------------------------------------------------------------------------   T POPE PLUGIN   -----------------------------------------------------------------------------------------
-"--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+"+-------------------------------------+
+"|            T-POPE PLUGINS           |
+"+-------------------------------------+
 
 
-Plugin 'tpope/vim-sensible' "Sensible Vim Defaults
+Plugin 'tpope/vim-sensible' " Sensible Vim Defaults
 Plugin 'tpope/vim-vinegar' " vinegar.vim
+"Plugin 'tpope/vim-fugitive' "Git Wrapper Plugin
 
 
-"--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+"+-------------------------------------+
+"|          N-NVIM - PLUGINS           |
+"+-------------------------------------+
 
 
-
-"--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-"-------------------------------------------------------------------------------------   NVIM R RELATED SETTINGS   -------------------------------------------------------------------------------------"
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-
-
-Plugin 'jalvesaq/Nvim-R' "Nvim-R
+Plugin 'jalvesaq/Nvim-R' " Nvim-R
 Plugin 'jalvesaq/vimcmdline'
-" NCM2:
-" assuming you're using vim-plug: https://github.com/junegunn/vim-plug
-Plugin 'ncm2/ncm2'
-"Plugin 'roxma/nvim-yarp'
-"Plugin 'jalvesaq/Nvim-R'
-Plugin 'gaalcaras/ncm-R'
-"Plugin 'vim-airline/vim-airline'
-"Plugin 'vim-airline/vim-airline-themes'
-let g:airline_theme='distinguished' "Colored Statusbar
-:set noshowmode
-" Vim 8 only
-if !has('nvim')
-    Plugin 'roxma/vim-hug-neovim-rpc'
+Plugin 'ncm2/ncm2' " Completion Plugin
+Plugin 'ncm-R' " R Completion source
+Plugin 'roxma/nvim-yarp' " Yet Another Remote Plugin Framework
+
+autocmd BufEnter * call ncm2#enable_for_buffer() " enable ncm2 for all buffers
+set completeopt=noinsert,menuone,noselect " IMPORTANT: :help Ncm2PopupOpen for more information 
+
+" NOTE: you need to install completion sources to get completions. Check
+" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
+Plugin 'ncm2/ncm2-bufword'
+Plugin 'ncm2/ncm2-path' " Needed for NCM2
+if !has('nvim') " Vim 8 only
+	Plugin 'roxma/vim-hug-neovim-rpc'
 endif
 
-" Optional: for snippet support
-" Further configuration might be required, read below
-Plugin 'sirver/UltiSnips'
-Plugin 'ncm2/ncm2-ultisnips'
+Plugin 'sirver/UltiSnips' " Optional: for snippet support
+Plugin 'ncm2/ncm2-ultisnips' " Further configuration might be required, read below
+Plugin 'ncm2/ncm2-tmux'
 
-" Optional: better Rnoweb support (LaTeX completion)
-Plugin 'lervag/vimtex'
+"Plugin 'lervag/vimtex' " Optional: better Rnoweb support (LaTeX completion)
 
-Plugin 'roxma/nvim-yarp'
+set shortmess+=c " suppress the annoying 'match x of y', 'The only match' and 'Pattern not " found' messages
+
+" When the <Enter> key is pressed while the popup menu is visible, it only  hides the menu. 
+" Use this mapping to close the menu and also start a new  line.
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+
+" Use <TAB> to select the popup menu:
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" wrap existing omnifunc
+" Note that omnifunc does not run in background and may probably block the
+" editor. If you don't want to be blocked by omnifunc too often, you could
+" add 180ms delay before the omni wrapper:
+"  'on_complete': ['ncm2#on_complete#delay', 180,
+"               \ 'ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
+au User Ncm2Plugin call ncm2#register_source({
+	\ 'name' : 'css',
+	\ 'priority': 9, 
+	\ 'subscope_enable': 1,
+	\ 'scope': ['css','scss'],
+	\ 'mark': 'css',
+	\ 'word_pattern': '[\w\-]+',
+	\ 'complete_pattern': ':\s*',
+	\ 'on_complete': ['ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
+	\ })
+"____________________________________________________________________________________________
 "Vim YARP settings - Yet Another Remote Plugin Framework for Neovim
-"let g:python_host_prog = '/usr/local/opt/python@2/bin/python2.7'
-"let g:python_host_prog = '/usr/local/Cellar/python@2/2.7.15/Frameworks/Python.framework/Versions/2.7/bin/python'
+
 let g:pyenv_host_prog = '/usr/local/bin/pyenv'
 let g:pip_host_prog = '/usr/local/bin/pip'
 let g:python_host_prog = '/usr/local/bin/python'
@@ -96,43 +110,27 @@ let g:loaded_python3_provider = 0
 let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
 let $NVIM_PYTHON_LOG_LEVEL="DEBUG"
 
-" enable ncm2 for all buffers
-autocmd BufEnter * call ncm2#enable_for_buffer()
-
 " IMPORTANT: :help Ncm2PopupOpen for more information
 set completeopt=noinsert,menuone,noselect
 
-" NOTE: you need to install completion sources to get completions. Check
-" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
-Plugin 'ncm2/ncm2-bufword'
-Plugin 'ncm2/ncm2-tmux'
-Plugin 'ncm2/ncm2-path'
-"Plugin 'tpope/vim-fugitive' "Git Wrapper Plugin
-
-"""Plugin 'gaalcaras/ncm-R'
-"""Plugin 'roxma/nvim-yarp'
-"""Plugin 'roxma/vim-hug-neovim-rpc'
-" NOTE: you need to install completion sources to get completions. Check
-    " our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
-"""Plugin 'ncm2/ncm2-bufword'
-"""Plugin 'ncm2/ncm2-stingtmux'
-"""Plugin 'ncm2/ncm2-path'
-
 let R_args_in_stline = 1 "show arguments in line
+"inoremap <silent> <expr> <CR> ncm2_ultisnips#expand_or("\<CR>", 'n')
+"let g:UltiSnipsExpandTrigger="<tab>"
+"let g:UltiSnipsJumpForwardTrigger="<tab>"
+"let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+"let g:UltiSnipsEditSplit="vertical"
 
 
-"--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-"----------------------------------------------------------------------------------------   THEME PLUGINS   --------------------------------------------------------------------------------------------"
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-
+"+-------------------------------------+
+"|          THEME SETTINGS             |
+"+-------------------------------------+
 
 "colored bottombar
 "Plugin 'scrooloose/nerdtree'
 Plugin 'vim-airline/vim-airline' "Powerline
 Plugin 'vim-airline/vim-airline-themes' "Powerline Themes
-let g:airline_='distinguished' "Colored Statusbar
+"let g:airline_='distinguished' "Colored Statusbar
+let g:airline_theme='distinguished' "Colored Statusbar
 Plugin 'felipec/notmuch-vim' "vim email client
 "Plugin 'nathanaelkane/vim-indent-guides'
 "Plugin 'whatyouhide/vim-gotham'
@@ -140,7 +138,7 @@ Plugin 'felipec/notmuch-vim' "vim email client
 "Plugin 'chrisbra/csv.vim'
 
 Plugin 'miyakogi/conoline.vim' "Different Ln Hilights INSERT/NORMAL
-	let g:conoline_auto_enable = 1
+let g:conoline_auto_enable = 1
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
@@ -159,7 +157,9 @@ Plugin 'miyakogi/conoline.vim' "Different Ln Hilights INSERT/NORMAL
 "Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 " Install L9 and avoid a Naming conflict if you've already installed a
 " different version somewhere else.
-" Plugin 'ascenator/L9', {'name': 'newL9'}
+
+" Plugin 'ascenator/L9', {'name': 'newL9'}"Plugin 'vim-airline/vim-airline'
+:set noshowmode
 
 
 "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
@@ -181,9 +181,10 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-"----------------------------------------------------------------------------------------------   REMAPS   ---------------------------------------------------------------------------------------------"
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+"+-------------------------------------+
+"|               REMAPS                |
+"+-------------------------------------+
 
 
 noremap  _ ""
@@ -194,15 +195,13 @@ inoremap =\ ->
 inoremap <C-x><c-o> <C-n>
 
 
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-"-------------------------------------------------------------------------------------------   END VUNDLE   --------------------------------------------------------------------------------------------"
+"+-------------------------------------+
+"|          THEME SETTINGS             |
+"+-------------------------------------+
 
-
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-"----------------------------------------------------------------------------------------   Theme Settings   -------------------------------------------------------------------------------------------"
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-
-
+:set wrap
+set linebreak
+set nolist  " list disables linebreak
 set number " show line numbers in vim
 highlight LineNr ctermfg=black ctermbg=white
 set relativenumber " show relative numbers
@@ -248,12 +247,14 @@ set macligatures
 "autocmd InsertLeave * :highlight CurserLineNr ctermfg=white ctermbg=black
 
 
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+"colorscheme gotham
+"https://github.com/whatyouhide/vim-gothamset showbreak=>\ \ |
 
 
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-"-------------------------------------------------------------------------------------------   T-MUX SETTINGS   ----------------------------------------------------------------------------------------"
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+"+-------------------------------------+
+"|          T-MUX SETTINGS             |
+"+-------------------------------------+
+
 
 "vim-tmux-navigator: https://github.com/christoomey/vim-tmux-navigator
 let g:tmux_navigator_no_mappings = 1
@@ -269,8 +270,8 @@ set laststatus=2
 
 " now set it up to change the status line based on mode
 if version >= 700
-  au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
-  au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
+	au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
+	au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
 endif
 
 let g:slime_target = "tmux"
@@ -281,25 +282,21 @@ let g:slime_paste_file = "$HOME/.slime_paste"
 set clipboard=unnamed
 let g:slime_target = "tmux"
 
+
+"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+
+
 "vimfeatures - http://www.oualline.com/vim/10/vimrc.html
 "Set the size of an indentation.
 "
 ":set sw=4
 "Have vim highlight the target of a search.
 
-
-
-augroup myvimrchooks
-    au!
-    autocmd bufwritepost .vimrc source ~/.vimrc
-augroup END "vimrc autoreload
-
-
 "automatically save folds
 "augroup AutoSaveFolds
-  "autocmd!
-  "autocmd BufWinLeave * mkview
-  "autocmd BufWinEnter * silent loadview
+"autocmd!
+"autocmd BufWinLeave * mkview
+"autocmd BufWinEnter * silent loadview
 "augroup END
 
 
@@ -312,31 +309,30 @@ augroup END "vimrc autoreload
 au! BufNewFile,BufRead *.R,*.Rout,*.r,*.Rhistory,*.Rt,*.Rout.save,*.Rout.fail,*.RProfile* setf r
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-"---------------------------------------------------------------------------------------------   NOTES   -----------------------------------------------------------------------------------------------"
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+"+-------------------------------------+
+"|               NOTES                 |
+"+-------------------------------------+
 
 
 "   Remove Trailing Characters - :%s/\s\+$//e
+"   fix indents gg=G
 
 
-"-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+"+-------------------------------------+
+"|             UNORGANIZED             |
+"+-------------------------------------+
 
 
+let g:netrw_liststyle = 3 "set netrw to use a tree style listing
+let g:netrw_browse_split = 4 "make it open the file in the previous window to the right of the project drawer
+let g:netrw_altv = 1
+let g:netrw_winsize = 25 "set the width of the window. The value is set in percent of the total window width
+let g:netrw_banner = 0
+augroup ProjectDrawer
+  autocmd!
+  autocmd VimEnter * :Vexplore
+augroup END "launch right after you’ve entered Vim
+let g:netrw_list_hide = '.git,.sass-cache,.jpg,.png,.svg,.afphoto'
 
+setglobal showcmd
 
