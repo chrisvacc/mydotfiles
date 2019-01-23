@@ -6,11 +6,12 @@ setOutputColors(normal = 150, negnum = 173, zero = 226,
                      infinite = 67, index = 240, stderror = 138,
                      warn = c(1, 16, 124), error = c(124, 231),
                      verbose = TRUE, zero.limit = NA)
+print(noquote(paste("Login time:", Sys.time())))
+print(noquote(paste( "Working Directory:", getwd())))
+
 library(tidyverse)
 library(ggthemes)
-library(svglite)
-library(tableHTML)
-#tableHTML(mtcars, rownames = FALSE, theme = 'scientific')
+
 filter<-dplyr::filter
 options(max.print=300)
 
@@ -21,6 +22,7 @@ options(colorout.noninteractive = TRUE)
 options(colorout.notatty = TRUE)
 
 #my functions
+#to do - add these to library lol
 headdf<-function(data){
 	data.frame(head(data))
 }
@@ -68,6 +70,5 @@ clipboard.write <- function (x,
 	sep = sep)
 	Close(osxclipboard)}
 
-print(noquote(paste("Login time:", Sys.time())))
-print(noquote(paste( "Working Directory:", getwd())))
+
 
