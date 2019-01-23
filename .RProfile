@@ -1,3 +1,4 @@
+# git note https://github.com/jalvesaq/colorout
 library(colorout)
 setOutputColors(normal = 150, negnum = 173, zero = 226,
                      number = 172, date = 179, string = 143,
