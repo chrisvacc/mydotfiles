@@ -1,28 +1,28 @@
-# git note https://github.com/jalvesaq/colorout
-library(colorout)
+library(colorout) # git note https://github.com/jalvesaq/colorout
 setOutputColors(normal = 150, negnum = 173, zero = 226,
                      number = 172, date = 179, string = 143,
                      const = 215, false = 137, true = 137,
                      infinite = 67, index = 240, stderror = 138,
                      warn = c(1, 16, 124), error = c(124, 231),
                      verbose = TRUE, zero.limit = NA)
-print(noquote(paste("Login time:", Sys.time())))
-print(noquote(paste( "Working Directory:", getwd())))
-
-library(tidyverse)
-library(ggthemes)
-
-filter<-dplyr::filter
 options(max.print=300)
-
 options(colorout.verbose = 0)
 options(colorout.anyterm = TRUE)
 options(colorout.dumb = TRUE)
 options(colorout.noninteractive = TRUE)
 options(colorout.notatty = TRUE)
 
+library(tidyverse); filter <- dplyr::filter
+library(ggthemes)
+
+#Login Script
+cat(noquote(paste("Login time:", Sys.time(),"\n")))
+cat(noquote(paste( "Working Directory:", getwd(),"\n")))
+
+
 #my functions
-#to do - add these to library lol
+#to do - add functions to library lol
+
 headdf<-function(data){
 	data.frame(head(data))
 }
