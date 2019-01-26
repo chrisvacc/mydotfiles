@@ -1,3 +1,14 @@
+#Login Script
+
+.First <- function(){
+library(tidyverse); filter <- dplyr::filter
+library(ggthemes)
+library(svglite)
+library(R.Toolshed)
+library(utils)
+#library(tableHTML)
+#tableHTML(mtcars, rownames = FALSE, theme = 'scientific')
+
 library(colorout) # git note https://github.com/jalvesaq/colorout
 setOutputColors(normal = 15, negnum = 27, zero = 27,#######
                      number = 27, date = 27, string = 39,
@@ -5,25 +16,60 @@ setOutputColors(normal = 15, negnum = 27, zero = 27,#######
                      infinite = 39, index = 240, stderror = 39,
                      warn = 21, error = c(27, 231),
                      verbose = FALSE, zero.limit = NA)
-options(max.print=300)
 options(colorout.verbose = 0)
 options(colorout.anyterm = TRUE)
 options(colorout.dumb = TRUE)
 options(colorout.noninteractive = TRUE)
 options(colorout.notatty = TRUE)
 
+options(editor="vim")
+options(max.print=300)
+options(menu.graphics=FALSE)
+options(repos=structure(c(CRAN="http://cloud.r-project.org/")))
+options(scipen=10) #disable scientitif notaion up to 10 chars
 
+# R prompts
+options(prompt="» ")
+options(continue="…  ") 
 
-library(tidyverse); filter <- dplyr::filter
-library(ggthemes)
-library(svglite)
-library(R.Toolshed)
-#library(tableHTML)
-#tableHTML(mtcars, rownames = FALSE, theme = 'scientific')
+Sys.setenv(R_HISTSIZE='1000000')
+Sys.setenv(R_HISTFILE='~/.Rhistory')
+utils::loadhistory(file = "~/.Rhistory")
 
-#Login Script
+# Misc Options
+options(tab.width = 2) 
+
+# Default CRAN mirror
+#local({r <- getOption("repos")
+#       r["CRAN"] <- "http://cloud.r-project.org/"
+#       options(repos=r)})
+
+ if(interactive()){
+    library(utils) 
+  }
 cat(noquote(paste("Login time:", Sys.time(),"\n")))
 cat(noquote(paste( "Working Directory:", getwd(),"\n")))
+}
+#End Startup Script
 
+#Dont bother me with workspace saving nonsense
+q <- function (save="no", ...) {
+  quit(save=save, ...)
+}
+
+
+#L ogout Script
+.Last <- function(){ 
+	cat(noquote(paste("Logout time:", Sys.time())))
+	savehistory(file = ".Rhistory_temp")
+	file.append("~/.Rhistory_temp","~/.Rhistory")
+	file.rename("~/.Rhistory_temp","~/.Rhistory")
+	time.stamp <- timestamp(stamp = date(),
+               prefix = "##------ ", suffix = " ------##",
+               quiet = TRUE)
+		log.out <- "##-------------- Log out ---------------##"
+		write(log.out,file="~/.Rhistory", append=TRUE)
+		write(time.stamp,file="~/.Rhistory", append=TRUE)
+ }
 
 
